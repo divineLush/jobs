@@ -21,5 +21,6 @@ export default {
     background-color: $main-background-color;
     color: $main-color;
     font-family: monospace;
+    font-size: 3vh;
   }
 </style>
