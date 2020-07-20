@@ -1,11 +1,15 @@
-<template>
-  <div id="app">
-    123
-  </div>
+<template lang="pug">
+  div#app
+    AppHeader
+    router-view
 </template>
 
 <script>
+import AppHeader from '../src/components/AppHeader.vue'
+
 export default {
-  name: 'app'
+  name: 'app',
+
+  components: { AppHeader }
 }
 </script>
