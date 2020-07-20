@@ -20,14 +20,6 @@
                 )
 
             div
-                //- label(for="full_time") Full Time
-                //- input.app-home__form__input(
-                //-     v-model="form.fullTime"
-                //-     type="checkbox"
-                //-     id="full_time"
-                //-     name="full_time"
-                //- )
-
                 label.app-home__form__checkbox-container
                     span.app-home__form__checkbox-container__label Full Time
                     input.app-home__form__checkbox-container__checkbox(
@@ -35,9 +27,17 @@
                         v-model.lazy="form.fullTime"
                     )
                     span.app-home__form__checkbox-container__checkmark
+
+        p(v-if="isLoading") Loading...
+
+        div.app-home__results-container
+            div(v-for="(result, key) in results" :key="key")
+                p {{ result.id }}
 </template>
 
 <script>
+import { url } from '../assets/utils'
+
 export default {
     name: 'AppHome',
 
@@ -47,7 +47,34 @@ export default {
                 description: '',
                 locations: '',
                 fullTime: false
-            }
+            },
+            results: [],
+            isLoading: false
+        }
+    },
+
+    watch: {
+        form: {
+            handler(after, before) {
+                this.makeRequest()
+            },
+            deep: true
+        }
+    },
+
+    mounted() {
+        this.makeRequest()
+    },
+
+    methods: {
+        makeRequest(reqUrl = url) {
+            this.isLoading = true
+            fetch(reqUrl)
+                .then(res => res.json())
+                .then(res => {
+                    this.results = res
+                    this.isLoading = false
+                })
         }
     }
 }
@@ -59,7 +86,7 @@ export default {
     .app-home {
         &__form {
             width: 30vh;
-            margin: 0 auto;
+            margin: 0 auto 10vh;
 
             &__input {
                 background-color: $secondary-background-color;
