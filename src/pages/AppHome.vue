@@ -69,12 +69,14 @@ export default {
     methods: {
         makeRequest(reqUrl = url) {
             this.isLoading = true
-            fetch(reqUrl)
-                .then(res => res.json())
-                .then(res => {
-                    this.results = res
-                    this.isLoading = false
-                })
+            setTimeout(() =>
+                fetch(reqUrl)
+                    .then(res => res.json())
+                    .then(res => {
+                        this.results = res
+                        this.isLoading = false
+                    })
+            , 500)
         }
     }
 }
