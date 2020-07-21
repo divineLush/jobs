@@ -88,7 +88,6 @@ export default {
                 .get(this.makeURL())
                 .then(res => {
                     this.results = res.data
-                    bus.results = res.data
                     bus.form = this.form
                     this.isLoading = false
                 })
