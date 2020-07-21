@@ -39,6 +39,7 @@
 <script>
 import axios from 'axios'
 import { url } from '../assets/utils'
+import { bus } from '../main'
 import AppResult from '../components/AppResult.vue'
 import AppMessage from '../components/AppMessage.vue'
 
@@ -64,7 +65,10 @@ export default {
     },
 
     mounted() {
-        this.makeRequest()
+        if (bus.form)
+            this.form = bus.form
+        else
+            this.makeRequest()
     },
 
     watch: {
@@ -84,6 +88,8 @@ export default {
                 .get(this.makeURL())
                 .then(res => {
                     this.results = res.data
+                    bus.results = res.data
+                    bus.form = this.form
                     this.isLoading = false
                 })
                 .catch(error => {

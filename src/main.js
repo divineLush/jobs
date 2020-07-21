@@ -5,6 +5,12 @@ import { routes } from './routes'
 
 Vue.use(VueRouter)
 
+export const bus = new Vue({
+  data: {
+    form: null
+  }
+})
+
 const router = new VueRouter({ routes })
 
 new Vue({
