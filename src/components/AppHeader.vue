@@ -1,6 +1,6 @@
 <template lang="pug">
     header.app-header
-        span Github Jobs
+        span GitHub Jobs
 </template>
 
 <script>

@@ -11,12 +11,12 @@
                 )
 
             div
-                label(for="locations") Locations
+                label(for="location") Location
                 input.app-home__form__input(
-                    v-model="form.locations"
+                    v-model="form.location"
                     type="text"
-                    id="locations"
-                    name="locations"
+                    id="location"
+                    name="location"
                 )
 
             div
@@ -28,55 +28,66 @@
                     )
                     span.app-home__form__checkbox-container__checkmark
 
-        p(v-if="isLoading") Loading...
+            button.app-home__form__btn(@click="makeRequest") Submit
+
+        p.app-home__message.app-home__message--loading(v-if="isLoading") Loading...
+
+        p.app-home__message.app-home__message--error(v-if="isError") You seem to have made too many requests...
 
         div.app-home__results-container
-            div(v-for="(result, key) in results" :key="key")
-                p {{ result.id }}
+            template(v-for="(result, key) in results")
+                AppResult(:result="result" :isFull="false")
 </template>
 
 <script>
 import { url } from '../assets/utils'
+import AppResult from '../components/AppResult.vue'
 
 export default {
     name: 'AppHome',
+
+    components: { AppResult },
 
     data() {
         return {
             form: {
                 description: '',
-                locations: '',
+                location: '',
                 fullTime: false
             },
             results: [],
-            isLoading: false
+            isLoading: false,
+            isError: false
         }
-    },
-
-    watch: {
-        form: {
-            handler(after, before) {
-                this.makeRequest()
-            },
-            deep: true
-        }
-    },
-
-    mounted() {
-        this.makeRequest()
     },
 
     methods: {
-        makeRequest(reqUrl = url) {
+        makeRequest() {
+            this.isError = false
             this.isLoading = true
-            setTimeout(() =>
-                fetch(reqUrl)
-                    .then(res => res.json())
-                    .then(res => {
-                        this.results = res
-                        this.isLoading = false
-                    })
-            , 500)
+            fetch(this.makeURL())
+                .then(res => res.json())
+                .then(res => {
+                    this.results = res
+                    this.isLoading = false
+                })
+                .catch(error => {
+                    this.isLoading = false
+                    this.isError = true
+                })
+        },
+        makeURL() {
+            const isFullTime = `?full_time=${ this.form.fullTime }`
+            const makeParam = (key) => {
+                const value = this.form[key]
+                const param = `&${ key }=${ value.split().join('+') }`
+
+                return value !== '' ? param : ''
+            }
+            const description = makeParam('description')
+            const location = makeParam('location')
+
+            return `${ url }${ isFullTime }${ description }${ location }`
         }
     }
 }
@@ -88,7 +99,7 @@ export default {
     .app-home {
         &__form {
             width: 30vh;
-            margin: 0 auto 10vh;
+            margin: 0 auto 25vh;
 
             &__input {
                 background-color: $secondary-background-color;
@@ -100,6 +111,16 @@ export default {
                 height: 3.5vh;
                 font-size: 2.5vh;
                 font-family: monospace;
+            }
+
+            &__btn {
+                background-color: $main-color;
+                font-family: monospace;
+                height: 5vh;
+                width: 20vh;
+                font-size: 3vh;
+                position: absolute;
+                top: 55vh;
             }
 
             &__checkbox-container {
@@ -167,6 +188,24 @@ export default {
                     transform: rotate(45deg);
                 }
             }
+        }
+
+        &__message {
+            text-align: center;
+            font-weight: bold;
+
+            &--loading {
+                color: $secondary-color;
+            }
+
+            &--error {
+                color: $header-color;
+            }
+        }
+
+        &__results-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
         }
     }
 </style>

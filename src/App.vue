@@ -1,7 +1,8 @@
 <template lang="pug">
   div#app
     AppHeader
-    router-view
+    main
+      router-view
 </template>
 
 <script>
@@ -22,5 +23,13 @@ export default {
     color: $main-color;
     font-family: monospace;
     font-size: 3vh;
+
+    .link {
+      color: $secondary-background-color;
+
+      &:hover {
+        color: $secondary-color;
+      }
+    }
   }
 </style>
