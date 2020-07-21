@@ -1,18 +1,22 @@
 <template lang="pug">
     div.app-job
         router-link.link(to="/") Home
-        p(v-if="isLoading") Loading...
+        AppMessage(:show="isLoading" :isLoading="true")
         AppResult(:result="job" :isFull="true")
 </template>
 
 <script>
 import { jobURL } from '../assets/utils'
 import AppResult from '../components/AppResult.vue'
+import AppMessage from '../components/AppMessage.vue'
 
 export default {
     name: 'AppJob',
 
-    components: { AppResult },
+    components: {
+        AppResult,
+        AppMessage
+    },
 
     data() {
         return {

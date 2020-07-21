@@ -30,9 +30,8 @@
 
             button.app-home__form__btn(@click="makeRequest") Submit
 
-        p.app-home__message.app-home__message--loading(v-if="isLoading") Loading...
-
-        p.app-home__message.app-home__message--error(v-if="isError") You seem to have made too many requests...
+        AppMessage(:show="isLoading" :isLoading="true")
+        AppMessage(:show="isError" :isLoading="false")
 
         div.app-home__results-container
             template(v-for="(result, key) in results")
@@ -42,11 +41,15 @@
 <script>
 import { url } from '../assets/utils'
 import AppResult from '../components/AppResult.vue'
+import AppMessage from '../components/AppMessage.vue'
 
 export default {
     name: 'AppHome',
 
-    components: { AppResult },
+    components: {
+        AppResult,
+        AppMessage
+    },
 
     data() {
         return {
@@ -187,19 +190,6 @@ export default {
                     -ms-transform: rotate(45deg);
                     transform: rotate(45deg);
                 }
-            }
-        }
-
-        &__message {
-            text-align: center;
-            font-weight: bold;
-
-            &--loading {
-                color: $secondary-color;
-            }
-
-            &--error {
-                color: $header-color;
             }
         }
 
