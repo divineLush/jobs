@@ -6,6 +6,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import { jobURL } from '../assets/utils'
 import AppResult from '../components/AppResult.vue'
 import AppMessage from '../components/AppMessage.vue'
@@ -33,10 +34,10 @@ export default {
 
     mounted() {
         this.isLoading = true
-        fetch(`${ jobURL }${ this.id }.json`)
-            .then(res => res.json())
+        axios
+            .get(`${ jobURL }${ this.id }.json`)
             .then(res => {
-                this.job = res
+                this.job = res.data
                 this.isLoading = false
             })
     }

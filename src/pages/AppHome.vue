@@ -4,7 +4,7 @@
             div
                 label(for="description") Description
                 input.app-home__form__input(
-                    v-model="form.description"
+                    v-model.lazy="form.description"
                     type="text"
                     id="description"
                     name="description"
@@ -13,7 +13,7 @@
             div
                 label(for="location") Location
                 input.app-home__form__input(
-                    v-model="form.location"
+                    v-model.lazy="form.location"
                     type="text"
                     id="location"
                     name="location"
@@ -24,11 +24,9 @@
                     span.app-home__form__checkbox-container__label Full Time
                     input.app-home__form__checkbox-container__checkbox(
                         type="checkbox"
-                        v-model.lazy="form.fullTime"
+                        v-model="form.fullTime"
                     )
                     span.app-home__form__checkbox-container__checkmark
-
-            button.app-home__form__btn(@click="makeRequest") Submit
 
         AppMessage(:show="isLoading" :isLoading="true")
         AppMessage(:show="isError" :isLoading="false")
@@ -39,6 +37,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import { url } from '../assets/utils'
 import AppResult from '../components/AppResult.vue'
 import AppMessage from '../components/AppMessage.vue'
@@ -64,14 +63,27 @@ export default {
         }
     },
 
+    mounted() {
+        this.makeRequest()
+    },
+
+    watch: {
+        form: {
+            handler(after, before) {
+                this.makeRequest()
+            },
+            deep: true
+        }
+    },
+
     methods: {
         makeRequest() {
             this.isError = false
             this.isLoading = true
-            fetch(this.makeURL())
-                .then(res => res.json())
+            axios
+                .get(this.makeURL())
                 .then(res => {
-                    this.results = res
+                    this.results = res.data
                     this.isLoading = false
                 })
                 .catch(error => {
@@ -84,7 +96,6 @@ export default {
             const makeParam = (key) => {
                 const value = this.form[key]
                 const param = `&${ key }=${ value.split().join('+') }`
-
                 return value !== '' ? param : ''
             }
             const description = makeParam('description')
@@ -114,19 +125,6 @@ export default {
                 height: 3.5vh;
                 font-size: 2.5vh;
                 font-family: monospace;
-            }
-
-            &__btn {
-                background-color: $main-color;
-                font-family: monospace;
-                height: 5vh;
-                width: 20vh;
-                font-size: 3vh;
-                position: absolute;
-                top: 55vh;
-                cursor: pointer;
-                user-select: none;
-                outline:none;
             }
 
             &__checkbox-container {
@@ -198,7 +196,7 @@ export default {
 
         &__results-container {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(2, 1fr);
         }
     }
 </style>

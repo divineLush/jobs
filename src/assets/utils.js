@@ -1,2 +1,3 @@
-export const url = 'https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions.json'
-export const jobURL = 'https://cors-anywhere.herokuapp.com/https://jobs.github.com/positions/'
+const proxy = 'https://cors-anywhere.herokuapp.com/'
+export const url = `${ proxy }https://jobs.github.com/positions.json`
+export const jobURL = `${ proxy }https://jobs.github.com/positions/`
