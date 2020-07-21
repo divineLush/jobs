@@ -13,7 +13,6 @@
             a(:href="result.url")
         template(v-else)
             router-link.link(:to="`/job/${ result.id }`") {{ result.title }}
-            p {{ result.title }}
             p {{ result.location }}
             p {{ result.type  }}
             p {{ result.company }}

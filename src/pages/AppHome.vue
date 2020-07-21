@@ -124,6 +124,9 @@ export default {
                 font-size: 3vh;
                 position: absolute;
                 top: 55vh;
+                cursor: pointer;
+                user-select: none;
+                outline:none;
             }
 
             &__checkbox-container {
